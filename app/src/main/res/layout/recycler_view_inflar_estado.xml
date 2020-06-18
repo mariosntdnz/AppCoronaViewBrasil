@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardViewEstado"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="15dp"
+        android:background="@drawable/contorno_view"
+        android:visibility="visible"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/contorno_view_blue"
+            android:clipToPadding="false"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textViewEstado"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="6dp"
+                android:background="#0288D1"
+                android:gravity="center"
+                android:text="Estado"
+                android:textColor="#FFFFFF"
+                android:textSize="24sp" />
+
+            <androidx.gridlayout.widget.GridLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:columnCount="2"
+                app:rowCount="4">
+
+                <TextView
+                    android:id="@+id/textViewNovosCasosEstado"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="  Novos Casos : \n"
+                    android:textColor="#0E0D0D"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/textViewNumeroNovosCasosEstado"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="100000000\n"
+                    android:textColor="#0E0D0D"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:layout_gravity="fill_horizontal|left" />
+
+                <TextView
+                    android:id="@+id/textViewTotalDeCasosEstado"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="  Total de Casos : \n"
+                    android:textColor="#0C0B0B"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/textViewNumeroTotalCasosEstado"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="100\n"
+                    android:textColor="#0E0D0D"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:layout_gravity="fill_horizontal|left" />
+
+                <TextView
+                    android:id="@+id/textViewNovosObitosEstado"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="  Novos Óbitos : \n"
+                    android:textColor="#0E0D0D"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/textViewNumeroNovosObitosEstado"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="100000000\n"
+                    android:textColor="#0E0D0D"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:layout_gravity="fill_horizontal|left" />
+
+                <TextView
+                    android:id="@+id/textViewTotalObitosEstado"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="  Total de Óbitos : \n"
+                    android:textColor="#0C0B0B"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/textViewNumeroTotalObitosEstado"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="100\n"
+                    android:textColor="#0E0D0D"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:layout_gravity="fill_horizontal|left" />
+            </androidx.gridlayout.widget.GridLayout>
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>

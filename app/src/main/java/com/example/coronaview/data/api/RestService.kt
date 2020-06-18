@@ -8,13 +8,13 @@ object RestService {
 
     private fun initRetrofit(): Retrofit {
 
-        return Retrofit.Builder()
-            .baseUrl("https://api.apify.com/")
-            .addCallAdapterFactory(CoroutineCallAdapterFactory())
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-    }
+    return Retrofit.Builder()
+        .baseUrl("https://api.apify.com/")
+        .addCallAdapterFactory(CoroutineCallAdapterFactory())
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+}
 
-    fun getRetrofit() = initRetrofit().create(ApiServiceCoronaEstatisticas::class.java)
+fun getRetrofit() = initRetrofit().create(ApiService::class.java)
 
 }

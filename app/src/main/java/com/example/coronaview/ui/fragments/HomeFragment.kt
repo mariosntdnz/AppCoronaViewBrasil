@@ -154,47 +154,6 @@ class HomeFragment : Fragment() {
             intent.putExtra(Intent.EXTRA_STREAM, uri);
             intent.putExtra(Intent.EXTRA_TEXT,"Baixe o app em : LINK")
             this.startActivity(Intent.createChooser(intent,"Compartilhe"))
-
-
-
-            /*val returnedBitmap = Bitmap.createBitmap(
-                requireView().width,
-                requireView().height,
-                Bitmap.Config.ARGB_8888
-            )
-            val canvas = Canvas(returnedBitmap)
-            val bgDrawable = requireView().background
-            if (bgDrawable != null) bgDrawable.draw(canvas)
-            else canvas.drawColor(Color.WHITE)
-            requireView().draw(canvas)
-            var path = Environment.getEStorageDirectory().toString() + "/a.jpg";
-            var imageFile = File(path);
-
-            var out: FileOutputStream? = null
-
-            try {
-                out = FileOutputStream(imageFile);
-                // choose JPEG format
-                returnedBitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
-                out.flush();
-                println("CLICK")
-            } catch (e: FileNotFoundException) {
-                // manage exception ...
-                println("CLICK2")
-            } catch (e: IOException) {
-                // manage exception ...
-                println("CLICK3")
-            } finally {
-
-                try {
-                    if (out != null) {
-                        out.close();
-                    }
-
-                } catch (e: Exception) {
-                }
-
-            }*/
         }
     }
 
