@@ -31,4 +31,5 @@ class MapCoronaFragment : Fragment() {
         // TODO: Use the ViewModel
     }
 
+    fun onClickFAB(){}
 }

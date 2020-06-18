@@ -119,7 +119,7 @@ class HomeFragment : Fragment() {
 
         progressBarRequisicao.visibility = View.GONE
 
-        var fab = requireActivity().findViewById<FloatingActionButton>(R.id.fab)
+        /*var fab = requireActivity().findViewById<FloatingActionButton>(R.id.fab)
         fab.setOnClickListener {
             ActivityCompat.requestPermissions(
                 requireActivity(),
@@ -154,7 +154,7 @@ class HomeFragment : Fragment() {
             intent.putExtra(Intent.EXTRA_STREAM, uri);
             intent.putExtra(Intent.EXTRA_TEXT,"Baixe o app em : LINK")
             this.startActivity(Intent.createChooser(intent,"Compartilhe"))
-        }
+        }*/
     }
 
     private fun responseFailure(error : Throwable?) = Toast.makeText(activity,error?.message?:"Falha",Toast.LENGTH_SHORT).show()
@@ -163,4 +163,40 @@ class HomeFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
     }
 
+    fun onClickFAB(){
+        ActivityCompat.requestPermissions(
+            requireActivity(),
+            arrayOf<String>(WRITE_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE),
+            PackageManager.PERMISSION_GRANTED
+        )
+        val builder: StrictMode.VmPolicy.Builder = StrictMode.VmPolicy.Builder()
+        StrictMode.setVmPolicy(builder.build())
+
+        val view1: View = requireActivity().window.decorView.rootView
+        view1.isDrawingCacheEnabled = true
+        val bitmap = Bitmap.createBitmap(view1.drawingCache)
+        view1.isDrawingCacheEnabled = false
+
+        val filePath: String = Environment.getExternalStorageDirectory()
+            .toString() + "/Download/" + Calendar.getInstance().getTime().toString() + ".jpg"
+        val fileScreenshot = File(filePath)
+        var fileOutputStream: FileOutputStream? = null
+        try {
+            fileOutputStream = FileOutputStream(fileScreenshot)
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream)
+            fileOutputStream.flush()
+            fileOutputStream.close()
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        }
+
+        val intent = Intent(Intent.ACTION_SEND)
+        val uri: Uri = Uri.fromFile(fileScreenshot)
+        intent.setDataAndType(uri, "image/jpeg")
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        intent.putExtra(Intent.EXTRA_STREAM, uri);
+        intent.putExtra(Intent.EXTRA_TEXT,"Baixe o app em : LINK")
+        this.startActivity(Intent.createChooser(intent,"Compartilhe"))
+
+    }
 }

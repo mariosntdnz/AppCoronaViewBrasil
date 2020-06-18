@@ -31,7 +31,7 @@ class EstadosFragment : Fragment() {
     }
 
     val viewModel = EstatisticasViewModel()
-
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -75,4 +75,5 @@ class EstadosFragment : Fragment() {
 
     private fun responseFailure(error : Throwable?) = Toast.makeText(activity,error?.message?:"Falha",Toast.LENGTH_SHORT).show()
 
+    fun onClickFAB() {}
 }
