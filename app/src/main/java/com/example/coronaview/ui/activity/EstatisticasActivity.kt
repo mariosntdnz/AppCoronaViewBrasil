@@ -36,7 +36,6 @@ class EstatisticasActivity : AppCompatActivity() {
     )
 
     lateinit var fab : FloatingActionButton
-    private  val viewModel = EstatisticasViewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +47,7 @@ class EstatisticasActivity : AppCompatActivity() {
             )
 
         val viewPager: ViewPager = findViewById(R.id.view_pager)
+        viewPager.offscreenPageLimit = sectionsPagerAdapter.count;
         viewPager.adapter = sectionsPagerAdapter
         val tabs: TabLayout = findViewById(R.id.tabs)
         tabs.setupWithViewPager(viewPager)
