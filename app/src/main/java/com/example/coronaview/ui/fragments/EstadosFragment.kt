@@ -1,28 +1,26 @@
 package com.example.coronaview.ui.fragments
 
-import android.content.Context
-import android.os.Build
-import androidx.lifecycle.ViewModelProviders
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.annotation.RequiresApi
+import android.widget.*
+import androidx.constraintlayout.solver.widgets.WidgetContainer
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-
 import com.example.coronaview.R
 import com.example.coronaview.common.Response
 import com.example.coronaview.common.Status
 import com.example.coronaview.data.api.model.CoronaEstatisticas
 import com.example.coronaview.ui.adapter.EstadosAdapter
-import com.example.coronaview.ui.adapter.SectionsPagerAdapter
 import com.example.coronaview.ui.viewModel.EstatisticasViewModel
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import kotlinx.android.synthetic.main.activity_main.*
+import com.google.android.material.resources.TextAppearance
+
 
 class EstadosFragment : Fragment() {
 
@@ -61,6 +59,7 @@ class EstadosFragment : Fragment() {
         "SE" to "Sergipe" ,
         "TO" to "Tocantins"
     )
+
     private val regiao_sudeste = arrayOf("RJ","SP","ES","MG")
     private val regiao_nordeste = arrayOf("MA","PI","RN","CE","PB","BA","PE","AL","SE")
     private val regiao_norte = arrayOf("AM","AC","RO","RR","AP","PA","TO")
@@ -128,6 +127,36 @@ class EstadosFragment : Fragment() {
     private fun responseFailure(error : Throwable?) = Toast.makeText(activity,error?.message?:"Falha",Toast.LENGTH_SHORT).show()
 
     fun onClickFAB(){
+        exibeAlertDialog()
+    }
 
+    fun exibeAlertDialog(){
+        val v: View = layoutInflater.inflate(R.layout.alert_dialog_filtro_estados, null)
+        val alert = AlertDialog.Builder(context)
+        alert.setView(v)
+        alert.setCancelable(true)
+        alert.setPositiveButton("Pesquisar", DialogInterface.OnClickListener(){ dialogInterface: DialogInterface, i: Int -> })
+        alert.setNeutralButton("Cancelar",DialogInterface.OnClickListener(){ dialogInterface: DialogInterface, i: Int -> })
+        val alertSetColor = alert.create()
+        alertSetColor.show()
+        alertSetColor.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(resources.getColor(R.color.azul))
+        alertSetColor.getButton(DialogInterface.BUTTON_NEUTRAL).setTextColor(resources.getColor(R.color.azul))
+
+        val spinnerRegiao = v.findViewById<Spinner>(R.id.spinner)
+        val adapterRegiao = ArrayAdapter<String>(
+            requireContext(),
+            R.layout.simple_list_item_spinner,
+            arrayListOf("Todas") + REGIAO.keys.toTypedArray())
+        adapterRegiao.setDropDownViewResource(R.layout.simple_list_item_spinner)
+        spinnerRegiao.adapter = adapterRegiao
+
+        val spinnerEstado = v.findViewById<Spinner>(R.id.spinner2)
+        val adapterEstado = ArrayAdapter<String>(
+            requireContext(),
+            R.layout.simple_list_item_spinner,
+            arrayListOf("Todos") + SIGLAS_ESTADO.values.toTypedArray())
+        adapterEstado.setDropDownViewResource(R.layout.simple_list_item_spinner)
+        spinnerEstado.adapter = adapterEstado
+        
     }
 }
