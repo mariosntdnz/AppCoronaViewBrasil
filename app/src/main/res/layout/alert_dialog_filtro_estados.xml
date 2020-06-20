@@ -33,13 +33,15 @@
         app:layout_constraintTop_toBottomOf="@+id/toolbar2" />
 
     <Spinner
-        android:id="@+id/spinner"
+        android:id="@+id/spinnerRegiao"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="5dp"
+        android:background="@drawable/arredondado_spinner"
         android:elevation="25dp"
         android:gravity="left"
+        android:textAlignment="gravity"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
@@ -59,11 +61,12 @@
         app:title="Filtrar" />
 
     <Spinner
-        android:id="@+id/spinner2"
+        android:id="@+id/spinnerEstado"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="5dp"
+        android:background="@drawable/arredondado_spinner"
         android:clipToPadding="false"
         android:elevation="25dp"
         android:gravity="left"
@@ -72,12 +75,13 @@
         app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
     <RadioGroup
+        android:id="@+id/radioGroupOrdenar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinner">
+        app:layout_constraintTop_toBottomOf="@+id/spinnerRegiao">
 
         <TextView
             android:id="@+id/textView5"
@@ -91,7 +95,7 @@
             android:id="@+id/radioButton2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
+            android:layout_marginLeft="5dp"
             android:buttonTint="#0288D1"
             android:text="Ordem Alfabética" />
 
@@ -99,7 +103,7 @@
             android:id="@+id/radioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
+            android:layout_marginLeft="5dp"
             android:buttonTint="#0288D1"
             android:text="Número de Casos" />
 
@@ -107,9 +111,10 @@
             android:id="@+id/radioButton3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
+            android:layout_marginLeft="5dp"
             android:buttonTint="#0288D1"
             android:text="Número de Óbitos" />
+
     </RadioGroup>
 
     <androidx.constraintlayout.widget.Guideline
@@ -117,6 +122,37 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.45" />
+        app:layout_constraintGuide_percent="0.48" />
+
+    <RadioGroup
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="15dp"
+        app:layout_constraintStart_toStartOf="@+id/guideline11"
+        app:layout_constraintTop_toBottomOf="@+id/spinnerEstado">
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="Ordem :"
+            android:textSize="18sp" />
+
+        <RadioButton
+            android:id="@+id/radioButton5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:buttonTint="#0288D1"
+            android:text="Crescente" />
+
+        <RadioButton
+            android:id="@+id/radioButton6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:buttonTint="#0288D1"
+            android:text="Descrescente" />
+    </RadioGroup>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

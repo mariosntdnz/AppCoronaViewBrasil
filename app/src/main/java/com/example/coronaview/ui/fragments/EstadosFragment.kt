@@ -142,7 +142,7 @@ class EstadosFragment : Fragment() {
         alertSetColor.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(resources.getColor(R.color.azul))
         alertSetColor.getButton(DialogInterface.BUTTON_NEUTRAL).setTextColor(resources.getColor(R.color.azul))
 
-        val spinnerRegiao = v.findViewById<Spinner>(R.id.spinner)
+        val spinnerRegiao = v.findViewById<Spinner>(R.id.spinnerRegiao)
         val adapterRegiao = ArrayAdapter<String>(
             requireContext(),
             R.layout.simple_list_item_spinner,
@@ -150,13 +150,12 @@ class EstadosFragment : Fragment() {
         adapterRegiao.setDropDownViewResource(R.layout.simple_list_item_spinner)
         spinnerRegiao.adapter = adapterRegiao
 
-        val spinnerEstado = v.findViewById<Spinner>(R.id.spinner2)
+        val spinnerEstado = v.findViewById<Spinner>(R.id.spinnerEstado)
         val adapterEstado = ArrayAdapter<String>(
             requireContext(),
             R.layout.simple_list_item_spinner,
             arrayListOf("Todos") + SIGLAS_ESTADO.values.toTypedArray())
         adapterEstado.setDropDownViewResource(R.layout.simple_list_item_spinner)
         spinnerEstado.adapter = adapterEstado
-        
     }
 }
