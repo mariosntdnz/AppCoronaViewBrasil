@@ -20,6 +20,7 @@ import com.example.coronaview.data.api.model.CoronaEstatisticas
 import com.example.coronaview.ui.adapter.EstadosAdapter
 import com.example.coronaview.ui.viewModel.EstatisticasViewModel
 import com.google.android.material.resources.TextAppearance
+import kotlinx.android.synthetic.main.alert_dialog_filtro_estados.*
 
 
 class EstadosFragment : Fragment() {
@@ -60,11 +61,11 @@ class EstadosFragment : Fragment() {
         "TO" to "Tocantins"
     )
 
-    private val regiao_sudeste = arrayOf("RJ","SP","ES","MG")
-    private val regiao_nordeste = arrayOf("MA","PI","RN","CE","PB","BA","PE","AL","SE")
-    private val regiao_norte = arrayOf("AM","AC","RO","RR","AP","PA","TO")
-    private val regiao_sul = arrayOf("RS","SC","PR")
-    private val regiao_centroOeste = arrayOf("GO","MT","MS","DF")
+    private val regiao_sudeste = arrayOf("Rio de Janeiro","São Paulo","Espírito Santo","Minas Gerais")
+    private val regiao_nordeste = arrayOf("Maranhão","Piauí","Rio Grande do Norte","Ceará","Paraíba","Bahia","Pernambuco","Alagoas","Sergipe")
+    private val regiao_norte = arrayOf("Amazonas","Acre","Rondônia","Roraima","Amapá","Pará","Tocantins")
+    private val regiao_sul = arrayOf("Rio Grande Sul","Santa Catarina","Paraná")
+    private val regiao_centroOeste = arrayOf("Goiás","Mato Grosso","Mato Grosso do Sul","Distrito Federal")
 
     private val REGIAO = mapOf<String,Array<String>>(
         "Sudeste"       to regiao_sudeste,
@@ -142,20 +143,55 @@ class EstadosFragment : Fragment() {
         alertSetColor.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(resources.getColor(R.color.azul))
         alertSetColor.getButton(DialogInterface.BUTTON_NEUTRAL).setTextColor(resources.getColor(R.color.azul))
 
+        val opcoesSpinnerRegiao = arrayListOf("Todas") + REGIAO.keys.toTypedArray()
+        var opcoesSpinnerEstado = arrayListOf("Todos") + SIGLAS_ESTADO.values.toTypedArray()
+
         val spinnerRegiao = v.findViewById<Spinner>(R.id.spinnerRegiao)
         val adapterRegiao = ArrayAdapter<String>(
             requireContext(),
             R.layout.simple_list_item_spinner,
-            arrayListOf("Todas") + REGIAO.keys.toTypedArray())
+            opcoesSpinnerRegiao)
         adapterRegiao.setDropDownViewResource(R.layout.simple_list_item_spinner)
         spinnerRegiao.adapter = adapterRegiao
 
+        var regiaoSelecionada = spinnerRegiao.selectedItem.toString()
+
+        opcoesSpinnerEstado = opcoesSpinnerEstado
+                              if (regiaoSelecionada == opcoesSpinnerRegiao[0])
+                              else opcoesSpinnerEstado.filter { REGIAO[regiaoSelecionada]?.contains(it)!!}
+
         val spinnerEstado = v.findViewById<Spinner>(R.id.spinnerEstado)
-        val adapterEstado = ArrayAdapter<String>(
+        var adapterEstado = ArrayAdapter<String>(
             requireContext(),
             R.layout.simple_list_item_spinner,
-            arrayListOf("Todos") + SIGLAS_ESTADO.values.toTypedArray())
+            opcoesSpinnerEstado)
         adapterEstado.setDropDownViewResource(R.layout.simple_list_item_spinner)
         spinnerEstado.adapter = adapterEstado
+
+        spinnerRegiao.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+            }
+
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ){
+                regiaoSelecionada = spinnerRegiao.selectedItem.toString()
+                var opcoesAux = opcoesSpinnerEstado
+                                            if (regiaoSelecionada == "Todas")  opcoesSpinnerEstado = opcoesSpinnerEstado
+                                            else  opcoesAux = opcoesSpinnerEstado.filter { it!! in REGIAO[regiaoSelecionada]!! }
+
+
+                adapterEstado = ArrayAdapter<String>(
+                    requireContext(),
+                    R.layout.simple_list_item_spinner,
+                    arrayOf("Todos") + opcoesAux)
+                adapterEstado.setDropDownViewResource(R.layout.simple_list_item_spinner)
+                spinnerEstado.adapter = adapterEstado
+            }
+        }
+
     }
 }
