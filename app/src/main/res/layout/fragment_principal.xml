@@ -14,7 +14,7 @@
         android:gravity="center"
         android:text="Painel Covid-19 / Brasil"
         android:textAllCaps="true"
-        android:textColor="#632FE1"
+        android:textColor="@color/colorPrimaryDark"
         android:textSize="30sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/guideline2"

@@ -183,7 +183,6 @@ class EstadosFragment : Fragment() {
                                             if (regiaoSelecionada == "Todas")  opcoesSpinnerEstado = opcoesSpinnerEstado
                                             else  opcoesAux = opcoesSpinnerEstado.filter { it!! in REGIAO[regiaoSelecionada]!! }
 
-
                 adapterEstado = ArrayAdapter<String>(
                     requireContext(),
                     R.layout.simple_list_item_spinner,
