@@ -1,14 +1,11 @@
 package com.example.coronaview.ui.fragments
 
-import android.app.AlertDialog
-import android.content.DialogInterface
+import android.content.Context
 import android.os.Bundle
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.constraintlayout.solver.widgets.WidgetContainer
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,7 +16,9 @@ import com.example.coronaview.common.Status
 import com.example.coronaview.data.api.model.CoronaEstatisticas
 import com.example.coronaview.ui.adapter.EstadosAdapter
 import com.example.coronaview.ui.viewModel.EstatisticasViewModel
-import com.google.android.material.resources.TextAppearance
+import com.example.coronaview.utils.alertDialog.AlertDialogManagerPesquisar
+import com.example.coronaview.utils.CustomAlertDialogBuilder
+import com.example.coronaview.utils.CustomAlertDialog
 import kotlinx.android.synthetic.main.alert_dialog_filtro_estados.*
 
 
@@ -128,10 +127,37 @@ class EstadosFragment : Fragment() {
     private fun responseFailure(error : Throwable?) = Toast.makeText(activity,error?.message?:"Falha",Toast.LENGTH_SHORT).show()
 
     fun onClickFAB(){
-        exibeAlertDialog()
+
+        val viewAlert = getViewAlertDialogPesquisar()
+        val alertDialog = createAlertDialogPesquisar(context,viewAlert)
+        val alertDialogManagerPesquisar = AlertDialogManagerPesquisar(requireContext(),alertDialog,viewAlert)
+
+        alertDialogManagerPesquisar.exibeAlerta()
+        alertDialogManagerPesquisar.inserirOpcoesSpinner(arrayListOf("Todas") + REGIAO.keys.toTypedArray(),"Região")
+        alertDialogManagerPesquisar.inserirOpcoesSpinner(arrayListOf("Todos") + SIGLAS_ESTADO.values.toTypedArray(),"Estado")
+
+        alertDialogManagerPesquisar.listenerSpinners(arrayListOf("Todos") + SIGLAS_ESTADO.values.toTypedArray(),REGIAO)
+
     }
 
-    fun exibeAlertDialog(){
+    private fun createAlertDialogPesquisar(context: Context?, v : View): CustomAlertDialog {
+
+        val alert = CustomAlertDialogBuilder(context)
+            .customBuilder(
+                v,
+                "Cancelar",
+                "Pesquisar")
+        val customAlert = CustomAlertDialog(context,alert.create())
+        customAlert.customButtonPositive(R.color.azul,14) //14 ->  default text size in android
+        customAlert.customButtonNegative(R.color.azul,14) //14 ->  default text size in android
+
+        return customAlert
+    }
+
+    private fun getViewAlertDialogPesquisar(): View =  layoutInflater.inflate(R.layout.alert_dialog_filtro_estados, null)
+
+    /*fun exibeAlertDialog(){
+
         val v: View = layoutInflater.inflate(R.layout.alert_dialog_filtro_estados, null)
         val alert = AlertDialog.Builder(context)
         alert.setView(v)
@@ -168,6 +194,14 @@ class EstadosFragment : Fragment() {
         adapterEstado.setDropDownViewResource(R.layout.simple_list_item_spinner)
         spinnerEstado.adapter = adapterEstado
 
+        listenerSpinners(spinnerRegiao,spinnerEstado)
+
+    }
+
+    fun listenerSpinners(spinnerRegiao : Spinner,spinnerEstado : Spinner){
+
+        var opcoesSpinnerEstado = arrayListOf("Todos") + SIGLAS_ESTADO.values.toTypedArray()
+
         spinnerRegiao.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
             }
@@ -178,12 +212,12 @@ class EstadosFragment : Fragment() {
                 position: Int,
                 id: Long
             ){
-                regiaoSelecionada = spinnerRegiao.selectedItem.toString()
+                var regiaoSelecionada = spinnerRegiao.selectedItem.toString()
                 var opcoesAux = opcoesSpinnerEstado
-                                            if (regiaoSelecionada == "Todas")  opcoesSpinnerEstado = opcoesSpinnerEstado
-                                            else  opcoesAux = opcoesSpinnerEstado.filter { it!! in REGIAO[regiaoSelecionada]!! }
+                if (regiaoSelecionada == "Todas")  opcoesSpinnerEstado = opcoesSpinnerEstado
+                else  opcoesAux = opcoesSpinnerEstado.filter { it!! in REGIAO[regiaoSelecionada]!! }
 
-                adapterEstado = ArrayAdapter<String>(
+                var adapterEstado = ArrayAdapter<String>(
                     requireContext(),
                     R.layout.simple_list_item_spinner,
                     arrayOf("Todos") + opcoesAux)
@@ -191,6 +225,5 @@ class EstadosFragment : Fragment() {
                 spinnerEstado.adapter = adapterEstado
             }
         }
-
-    }
+    }*/
 }
