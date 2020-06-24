@@ -5,6 +5,8 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.DialogInterface.OnShowListener
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.MutableLiveData
+import io.reactivex.Observable
 import java.util.*
 
 class CustomAlertDialog(
@@ -16,6 +18,10 @@ class CustomAlertDialog(
     private var textSizePositive = 0
     private var colorNegative = 0
     private var textSizeNegative = 0
+
+    var positiveClick : MutableLiveData<Boolean> = MutableLiveData()
+    var negativeClick : MutableLiveData<Boolean> = MutableLiveData()
+
     fun customButtonPositive(colorResources: Int, textSize: Int): CustomAlertDialog {
         colorPositive = colorResources
         textSizePositive = textSize
@@ -52,9 +58,18 @@ class CustomAlertDialog(
                     )
                     negative.setTextColor(ContextCompat.getColor(context, c!!))
                     negative.textSize = textSizeNegative.toFloat()
+                    negative.setOnClickListener {
+                        negativeClick.value = true
+                        alertDialog.dismiss()
+                    }
                 }
-            positive.setOnClickListener{/*clickPositivo(dialog)*/}
+
+            positive.setOnClickListener{
+                positiveClick.value = true
+                alertDialog.dismiss()
+            }
         }
     }
+
 
 }

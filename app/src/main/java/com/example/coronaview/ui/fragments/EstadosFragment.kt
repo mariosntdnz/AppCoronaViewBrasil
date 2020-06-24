@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,10 +17,8 @@ import com.example.coronaview.common.Status
 import com.example.coronaview.data.api.model.CoronaEstatisticas
 import com.example.coronaview.ui.adapter.EstadosAdapter
 import com.example.coronaview.ui.viewModel.EstatisticasViewModel
-import com.example.coronaview.utils.alertDialog.AlertDialogManagerPesquisar
 import com.example.coronaview.utils.CustomAlertDialogBuilder
 import com.example.coronaview.utils.CustomAlertDialog
-import kotlinx.android.synthetic.main.alert_dialog_filtro_estados.*
 
 
 class EstadosFragment : Fragment() {
@@ -74,6 +73,8 @@ class EstadosFragment : Fragment() {
         "Centro-Oeste"  to regiao_centroOeste
     )
 
+    var coronaEstatisticas : List<CoronaEstatisticas>? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -107,9 +108,9 @@ class EstadosFragment : Fragment() {
 
     private fun responseSuccess(result : Any?){
         val r_view_estados = requireActivity().findViewById<RecyclerView>(R.id.recyclerViewEstatisticasPorEstado)
-        val coronaEstatisticas = result as List<CoronaEstatisticas>
+        coronaEstatisticas = result as List<CoronaEstatisticas>
 
-        coronaEstatisticas.map {itCoronaEstatisticas ->
+        coronaEstatisticas!!.map {itCoronaEstatisticas ->
             itCoronaEstatisticas.infectedByRegion.map {itCoronaByRegion->
                 itCoronaByRegion.state = SIGLAS_ESTADO[itCoronaByRegion.state]
             }
@@ -118,7 +119,7 @@ class EstadosFragment : Fragment() {
             }
         }
 
-        r_view_estados.adapter = EstadosAdapter(coronaEstatisticas,requireActivity().applicationContext)
+        r_view_estados.adapter = EstadosAdapter(coronaEstatisticas!!,requireActivity().applicationContext)
         r_view_estados.layoutManager = LinearLayoutManager(requireActivity().applicationContext,LinearLayoutManager.VERTICAL,false)
         r_view_estados.visibility = View.VISIBLE
 
@@ -130,13 +131,27 @@ class EstadosFragment : Fragment() {
 
         val viewAlert = getViewAlertDialogPesquisar()
         val alertDialog = createAlertDialogPesquisar(context,viewAlert)
-        val alertDialogManagerPesquisar = AlertDialogManagerPesquisar(requireContext(),alertDialog,viewAlert)
+        alertDialog.show()
+        gerenciarDialogo(alertDialog,viewAlert)
 
-        alertDialogManagerPesquisar.exibeAlerta()
-        alertDialogManagerPesquisar.inserirOpcoesSpinner(arrayListOf("Todas") + REGIAO.keys.toTypedArray(),"Região")
-        alertDialogManagerPesquisar.inserirOpcoesSpinner(arrayListOf("Todos") + SIGLAS_ESTADO.values.toTypedArray(),"Estado")
+    }
 
-        alertDialogManagerPesquisar.listenerSpinners(arrayListOf("Todos") + SIGLAS_ESTADO.values.toTypedArray(),REGIAO)
+    private fun gerenciarDialogo(alertDialog: CustomAlertDialog, viewAlert : View){
+
+        var opcoesRegiao = arrayListOf("Todas") + REGIAO.keys.toTypedArray()
+        var opcoesEstados = arrayListOf("Todos") + SIGLAS_ESTADO.values.toTypedArray()
+
+        var spinnerRegiao = viewAlert.findViewById<Spinner>(R.id.spinnerRegiao)
+        var spinnerEstado = viewAlert.findViewById<Spinner>(R.id.spinnerEstado)
+
+        inserirOpcoesSpinner(opcoesEstados,spinnerEstado)
+        inserirOpcoesSpinner(opcoesRegiao,spinnerRegiao)
+
+        listenerSpinners(opcoesEstados,REGIAO,spinnerRegiao,spinnerEstado)
+
+        alertDialog.positiveClick.observe(viewLifecycleOwner, Observer {
+
+        })
 
     }
 
@@ -145,8 +160,8 @@ class EstadosFragment : Fragment() {
         val alert = CustomAlertDialogBuilder(context)
             .customBuilder(
                 v,
-                "Cancelar",
-                "Pesquisar")
+                "Pesquisar",
+                "Cancelar")
         val customAlert = CustomAlertDialog(context,alert.create())
         customAlert.customButtonPositive(R.color.azul,14) //14 ->  default text size in android
         customAlert.customButtonNegative(R.color.azul,14) //14 ->  default text size in android
@@ -156,6 +171,40 @@ class EstadosFragment : Fragment() {
 
     private fun getViewAlertDialogPesquisar(): View =  layoutInflater.inflate(R.layout.alert_dialog_filtro_estados, null)
 
+    private fun listenerSpinners(opcoesEstados: List<String>,regioes : Map<String,Array<String>>,spinnerRegiao: Spinner,spinnerEstado: Spinner){
+
+        spinnerRegiao.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                var regiaoSelecionada = spinnerRegiao.selectedItem.toString()
+                var opcoesAux = opcoesEstados
+
+                if (regiaoSelecionada != "Todas") {
+                    opcoesAux = arrayListOf("Todos") + opcoesEstados.filter { it!! in regioes[regiaoSelecionada]!! }
+                }
+
+                inserirOpcoesSpinner(opcoesAux,spinnerEstado)
+            }
+        }
+    }
+
+    private fun inserirOpcoesSpinner(opcoes : List<String>, spinner : Spinner){
+        var adapter = getAdapterFromSpinner(opcoes)
+        adapter.setDropDownViewResource(R.layout.simple_list_item_spinner)
+        spinner.adapter = adapter
+    }
+
+    private fun getAdapterFromSpinner(opcoes: List<String>): ArrayAdapter<String> {
+        return ArrayAdapter<String>(
+            requireContext(),
+            R.layout.simple_list_item_spinner,
+            opcoes)
+    }
     /*fun exibeAlertDialog(){
 
         val v: View = layoutInflater.inflate(R.layout.alert_dialog_filtro_estados, null)
