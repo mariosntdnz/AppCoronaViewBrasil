@@ -105,7 +105,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:buttonTint="#0288D1"
-            android:text="Número de Casos" />
+            android:text="Novos Casos" />
 
         <RadioButton
             android:id="@+id/radioButton3"
@@ -113,7 +113,24 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:buttonTint="#0288D1"
-            android:text="Número de Óbitos" />
+            android:text="Total de Casos" />
+
+        <RadioButton
+            android:id="@+id/radioButton7"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:buttonTint="#0288D1"
+            android:text="Novos Óbitos" />
+
+        <RadioButton
+            android:id="@+id/radioButton4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:buttonTint="#0288D1"
+            android:checked="true"
+            android:text="Total de Óbitos" />
 
     </RadioGroup>
 
@@ -125,6 +142,7 @@
         app:layout_constraintGuide_percent="0.48" />
 
     <RadioGroup
+        android:id="@+id/radioGroupOrdenarPor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
@@ -145,6 +163,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:buttonTint="#0288D1"
+            android:checked="true"
             android:text="Crescente" />
 
         <RadioButton

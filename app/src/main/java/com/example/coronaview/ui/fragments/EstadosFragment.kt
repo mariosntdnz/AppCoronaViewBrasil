@@ -17,8 +17,11 @@ import com.example.coronaview.common.Status
 import com.example.coronaview.data.api.model.CoronaEstatisticas
 import com.example.coronaview.ui.adapter.EstadosAdapter
 import com.example.coronaview.ui.viewModel.EstatisticasViewModel
+import com.example.coronaview.utils.CoronaEstatisticasAuxiliarExibirEstados
 import com.example.coronaview.utils.CustomAlertDialogBuilder
 import com.example.coronaview.utils.CustomAlertDialog
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class EstadosFragment : Fragment() {
@@ -107,8 +110,25 @@ class EstadosFragment : Fragment() {
     }
 
     private fun responseSuccess(result : Any?){
-        val r_view_estados = requireActivity().findViewById<RecyclerView>(R.id.recyclerViewEstatisticasPorEstado)
+
         coronaEstatisticas = result as List<CoronaEstatisticas>
+        coronaEstatisticas = replaceSiglaPorNome(coronaEstatisticas!!)
+
+        var coronaEstatisticasPorEstado = parseCoronaEstatisticasToListExibirDadosEstados()
+
+        exibirPorEstado(coronaEstatisticasPorEstado)
+    }
+
+    private fun responseFailure(error : Throwable?) = Toast.makeText(activity,error?.message?:"Falha",Toast.LENGTH_SHORT).show()
+
+    private fun exibirPorEstado(coronaEstatisticasPorEstado: ArrayList<CoronaEstatisticasAuxiliarExibirEstados>){
+        val r_view_estados = requireActivity().findViewById<RecyclerView>(R.id.recyclerViewEstatisticasPorEstado)
+        r_view_estados.adapter = EstadosAdapter(coronaEstatisticasPorEstado,requireActivity().applicationContext)
+        r_view_estados.layoutManager = LinearLayoutManager(requireActivity().applicationContext,LinearLayoutManager.VERTICAL,false)
+        r_view_estados.visibility = View.VISIBLE
+    }
+
+    private fun replaceSiglaPorNome(coronaEstatisticas : List<CoronaEstatisticas>): List<CoronaEstatisticas> {
 
         coronaEstatisticas!!.map {itCoronaEstatisticas ->
             itCoronaEstatisticas.infectedByRegion.map {itCoronaByRegion->
@@ -119,13 +139,8 @@ class EstadosFragment : Fragment() {
             }
         }
 
-        r_view_estados.adapter = EstadosAdapter(coronaEstatisticas!!,requireActivity().applicationContext)
-        r_view_estados.layoutManager = LinearLayoutManager(requireActivity().applicationContext,LinearLayoutManager.VERTICAL,false)
-        r_view_estados.visibility = View.VISIBLE
-
+        return coronaEstatisticas
     }
-
-    private fun responseFailure(error : Throwable?) = Toast.makeText(activity,error?.message?:"Falha",Toast.LENGTH_SHORT).show()
 
     fun onClickFAB(){
 
@@ -150,6 +165,25 @@ class EstadosFragment : Fragment() {
         listenerSpinners(opcoesEstados,REGIAO,spinnerRegiao,spinnerEstado)
 
         alertDialog.positiveClick.observe(viewLifecycleOwner, Observer {
+            if(it == true) {
+
+                var radioGroupRegiao = viewAlert.findViewById<RadioGroup>(R.id.radioGroupOrdenar)
+                var radioButtonRegiaoChecked = viewAlert.findViewById<RadioButton>(radioGroupRegiao.checkedRadioButtonId)
+
+                var radioGroupOrdenarPor = viewAlert.findViewById<RadioGroup>(R.id.radioGroupOrdenarPor)
+                var radioButtonEstadoChecked = viewAlert.findViewById<RadioButton>(radioGroupOrdenarPor.checkedRadioButtonId)
+
+                var exibirDados = parseCoronaEstatisticasToListExibirDadosEstados()
+
+                var coronaEstatisticasFiltrado = filterListExibirDadosEstadosListFromAlertDialog(
+                    exibirDados,
+                    spinnerRegiao.selectedItem.toString(),
+                    spinnerEstado.selectedItem.toString(),
+                    radioButtonRegiaoChecked.text.toString(),
+                    radioButtonEstadoChecked.text.toString()
+                )
+                exibirPorEstado(coronaEstatisticasFiltrado)
+            }
 
         })
 
@@ -205,6 +239,101 @@ class EstadosFragment : Fragment() {
             R.layout.simple_list_item_spinner,
             opcoes)
     }
+    private fun parseCoronaEstatisticasToListExibirDadosEstados(): ArrayList<CoronaEstatisticasAuxiliarExibirEstados> {
+        var exibirDados = ArrayList<CoronaEstatisticasAuxiliarExibirEstados>()
+        for (i in 0..coronaEstatisticas?.get(0)!!.infectedByRegion.size-1){
+            var estado    = coronaEstatisticas?.get(0)!!.infectedByRegion[i].state!!
+            var casosNovos  = coronaEstatisticas?.get(0)!!.infectedByRegion[i].count!! - coronaEstatisticas?.get(1)!!.infectedByRegion[i].count!!
+            var obitosNovos = coronaEstatisticas?.get(0)!!.deceasedByRegion[i].count!! - coronaEstatisticas?.get(1)!!.deceasedByRegion[i].count!!
+            var totalCasos  = coronaEstatisticas?.get(0)!!.infectedByRegion[i].count!!
+            var totalObitos = coronaEstatisticas?.get(0)!!.deceasedByRegion[i].count!!
+
+            exibirDados.add(CoronaEstatisticasAuxiliarExibirEstados(
+                estado,
+                casosNovos,
+                totalCasos,
+                obitosNovos,
+                totalObitos
+            ))
+
+        }
+
+        return exibirDados
+    }
+
+    private fun filterListExibirDadosEstadosListFromAlertDialog(exibirDados:ArrayList<CoronaEstatisticasAuxiliarExibirEstados>,regiaoSelecionada : String, estadoSelecionado : String, ordenarPor : String,exibirEmOrdem : String) : ArrayList<CoronaEstatisticasAuxiliarExibirEstados> {
+
+        var coronaEstatisticasPorEstadoFiltrado = filtrarEstadosAlertDiaolg(exibirDados,regiaoSelecionada,estadoSelecionado)
+        var coronaEstatisticasOrdenado = ordenarEstadosAlertDialog(coronaEstatisticasPorEstadoFiltrado ,ordenarPor,exibirEmOrdem)
+
+        return coronaEstatisticasOrdenado
+    }
+
+    private fun filtrarEstadosAlertDiaolg(exibirDados:ArrayList<CoronaEstatisticasAuxiliarExibirEstados>,regiaoSelecionada : String, estadoSelecionado : String) : ArrayList<CoronaEstatisticasAuxiliarExibirEstados>{
+        return ArrayList<CoronaEstatisticasAuxiliarExibirEstados>(
+            exibirDados.filter {
+                (regiaoSelecionada == "Todas" && estadoSelecionado == "Todos") ||
+                        (regiaoSelecionada == "Todas" && it.estado == estadoSelecionado)||
+                        (regiaoSelecionada != "Todas" && it.estado!! in REGIAO[regiaoSelecionada]!! && estadoSelecionado == "Todos")||
+                        (regiaoSelecionada != "Todas" && it.estado == estadoSelecionado)
+            })
+    }
+    private fun ordenarEstadosAlertDialog(coronaEstatisticasFiltrado: ArrayList<CoronaEstatisticasAuxiliarExibirEstados>,ordenarPor : String,exibirEmOrdem : String): ArrayList<CoronaEstatisticasAuxiliarExibirEstados> {
+
+        var ordenado = ArrayList<CoronaEstatisticasAuxiliarExibirEstados>()
+
+        when(ordenarPor){
+            "Ordem Alfabética" -> ordenado = ordenarPorOrdemAlfabetica(coronaEstatisticasFiltrado,exibirEmOrdem)
+            "Novos Casos" ->      ordenado = ordenarPorNovosCasos(coronaEstatisticasFiltrado,exibirEmOrdem)
+            "Total de Casos" ->   ordenado = ordenarPorTotalDeCasos(coronaEstatisticasFiltrado,exibirEmOrdem)
+            "Novos Óbitos" ->     ordenado = ordenarPorNovosObitos(coronaEstatisticasFiltrado,exibirEmOrdem)
+            "Total de Óbitos" ->  ordenado = ordenarPorTotalDeObitos(coronaEstatisticasFiltrado,exibirEmOrdem)
+        }
+
+        return ordenado
+    }
+
+    private fun ordenarPorOrdemAlfabetica(coronaEstatisticasFiltrado: ArrayList<CoronaEstatisticasAuxiliarExibirEstados>,exibirEmOrdem:String) : ArrayList<CoronaEstatisticasAuxiliarExibirEstados>{
+        var ordenado = coronaEstatisticasFiltrado
+
+        if(exibirEmOrdem == "Crescente") ordenado.sortBy{ it.estado}
+        else                             ordenado.sortByDescending{it.estado}
+        return ordenado
+
+    }
+
+    private fun ordenarPorNovosCasos(coronaEstatisticasFiltrado: ArrayList<CoronaEstatisticasAuxiliarExibirEstados>,exibirEmOrdem:String) : ArrayList<CoronaEstatisticasAuxiliarExibirEstados>{
+        var ordenado = coronaEstatisticasFiltrado
+
+        if(exibirEmOrdem == "Crescente") ordenado.sortBy{ it.novosCasos}
+        else                             ordenado.sortBy{it.novosCasos}
+        return ordenado
+    }
+
+    private fun ordenarPorTotalDeCasos(coronaEstatisticasFiltrado: ArrayList<CoronaEstatisticasAuxiliarExibirEstados>,exibirEmOrdem:String) : ArrayList<CoronaEstatisticasAuxiliarExibirEstados>{
+        var ordenado = coronaEstatisticasFiltrado
+
+        if(exibirEmOrdem == "Crescente") ordenado.sortBy{ it.totalCasos}
+        else                             ordenado.sortByDescending{it.totalCasos}
+        return ordenado
+    }
+
+    private fun ordenarPorNovosObitos(coronaEstatisticasFiltrado: ArrayList<CoronaEstatisticasAuxiliarExibirEstados>,exibirEmOrdem:String) : ArrayList<CoronaEstatisticasAuxiliarExibirEstados>{
+        var ordenado = coronaEstatisticasFiltrado
+
+        if(exibirEmOrdem == "Crescente") ordenado.sortBy{ it.novosObitos}
+        else                             ordenado.sortByDescending{it.novosObitos}
+        return ordenado
+    }
+
+    private fun ordenarPorTotalDeObitos(coronaEstatisticasFiltrado: ArrayList<CoronaEstatisticasAuxiliarExibirEstados>,exibirEmOrdem:String) : ArrayList<CoronaEstatisticasAuxiliarExibirEstados>{
+        var ordenado = coronaEstatisticasFiltrado
+
+        if(exibirEmOrdem == "Crescente") ordenado.sortBy{ it.totalObitos}
+        else                             ordenado.sortByDescending{it.totalObitos}
+        return ordenado
+    }
+
     /*fun exibeAlertDialog(){
 
         val v: View = layoutInflater.inflate(R.layout.alert_dialog_filtro_estados, null)
