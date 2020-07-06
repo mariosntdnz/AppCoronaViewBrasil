@@ -7,7 +7,7 @@ import androidx.fragment.app.FragmentPagerAdapter
 import com.example.coronaview.R
 import com.example.coronaview.ui.fragments.EstadosFragment
 import com.example.coronaview.ui.fragments.HomeFragment
-import com.example.coronaview.ui.fragments.MapCoronaFragment
+import com.example.coronaview.ui.fragments.GraficoCoronaFragment
 
 private val TAB_TITLES = arrayOf(
         R.string.tab_text_1,
@@ -17,7 +17,7 @@ private val TAB_TITLES = arrayOf(
 private var FRAGMENTS = arrayListOf<Fragment>(
     EstadosFragment(),
     HomeFragment(),
-    MapCoronaFragment()
+    GraficoCoronaFragment()
 )
 /**
  * A [FragmentPagerAdapter] that returns a fragment corresponding to

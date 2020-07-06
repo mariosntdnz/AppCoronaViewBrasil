@@ -17,9 +17,12 @@ import com.example.coronaview.common.Status
 import com.example.coronaview.data.api.model.CoronaEstatisticas
 import com.example.coronaview.ui.adapter.EstadosAdapter
 import com.example.coronaview.ui.viewModel.EstatisticasViewModel
+import com.example.coronaview.utils.ConstantesRegiao.REGIAO
+import com.example.coronaview.utils.ConstantesRegiao.SIGLAS_ESTADO
 import com.example.coronaview.utils.CoronaEstatisticasAuxiliarExibirEstados
 import com.example.coronaview.utils.CustomAlertDialogBuilder
 import com.example.coronaview.utils.CustomAlertDialog
+import com.example.coronaview.utils.ParserCoronaEstatisticasToListExibirDadosEstados
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -32,51 +35,8 @@ class EstadosFragment : Fragment() {
 
     val viewModel = EstatisticasViewModel()
 
-    private val SIGLAS_ESTADO = mapOf<String,String>(
-        "AC" to "Acre",
-        "AL" to "Alagoas" ,
-        "AP" to "Amapá" ,
-        "AM" to "Amazonas",
-        "BA" to "Bahia",
-        "CE" to "Ceará",
-        "DF" to "Distrito Federal"  ,
-        "ES" to "Espírito Santo" ,
-        "GO" to "Goiás",
-        "MA" to "Maranhão" ,
-        "MT" to "Mato Grosso" ,
-        "MS" to "Mato Grosso do Sul",
-        "MG" to "Minas Gerais" ,
-        "PA" to "Pará" ,
-        "PB" to "Paraíba",
-        "PR" to "Paraná",
-        "PE" to "Pernambuco",
-        "PI" to "Piauí",
-        "RJ" to "Rio de Janeiro",
-        "RN" to "Rio Grande do Norte" ,
-        "RS" to "Rio Grande Sul" ,
-        "RO" to "Rondônia",
-        "RR" to "Roraima" ,
-        "SC" to "Santa Catarina",
-        "SP" to "São Paulo" ,
-        "SE" to "Sergipe" ,
-        "TO" to "Tocantins"
-    )
-
-    private val regiao_sudeste = arrayOf("Rio de Janeiro","São Paulo","Espírito Santo","Minas Gerais")
-    private val regiao_nordeste = arrayOf("Maranhão","Piauí","Rio Grande do Norte","Ceará","Paraíba","Bahia","Pernambuco","Alagoas","Sergipe")
-    private val regiao_norte = arrayOf("Amazonas","Acre","Rondônia","Roraima","Amapá","Pará","Tocantins")
-    private val regiao_sul = arrayOf("Rio Grande Sul","Santa Catarina","Paraná")
-    private val regiao_centroOeste = arrayOf("Goiás","Mato Grosso","Mato Grosso do Sul","Distrito Federal")
-
-    private val REGIAO = mapOf<String,Array<String>>(
-        "Sudeste"       to regiao_sudeste,
-        "Nordeste"      to regiao_nordeste,
-        "Norte"         to regiao_norte,
-        "Sul"           to regiao_sul,
-        "Centro-Oeste"  to regiao_centroOeste
-    )
-
     var coronaEstatisticas : List<CoronaEstatisticas>? = null
+    private val parser = ParserCoronaEstatisticasToListExibirDadosEstados()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -114,7 +74,7 @@ class EstadosFragment : Fragment() {
         coronaEstatisticas = result as List<CoronaEstatisticas>
         coronaEstatisticas = replaceSiglaPorNome(coronaEstatisticas!!)
 
-        var coronaEstatisticasPorEstado = parseCoronaEstatisticasToListExibirDadosEstados()
+        var coronaEstatisticasPorEstado = parser.parseCoronaEstatisticasToListExibirDadosEstados(coronaEstatisticas!!)
 
         exibirPorEstado(coronaEstatisticasPorEstado)
     }
@@ -173,7 +133,7 @@ class EstadosFragment : Fragment() {
                 var radioGroupOrdenarPor = viewAlert.findViewById<RadioGroup>(R.id.radioGroupOrdenarPor)
                 var radioButtonEstadoChecked = viewAlert.findViewById<RadioButton>(radioGroupOrdenarPor.checkedRadioButtonId)
 
-                var exibirDados = parseCoronaEstatisticasToListExibirDadosEstados()
+                var exibirDados = parser.parseCoronaEstatisticasToListExibirDadosEstados(coronaEstatisticas!!)
 
                 var coronaEstatisticasFiltrado = filterListExibirDadosEstadosListFromAlertDialog(
                     exibirDados,
@@ -239,7 +199,7 @@ class EstadosFragment : Fragment() {
             R.layout.simple_list_item_spinner,
             opcoes)
     }
-    private fun parseCoronaEstatisticasToListExibirDadosEstados(): ArrayList<CoronaEstatisticasAuxiliarExibirEstados> {
+    /*private fun parseCoronaEstatisticasToListExibirDadosEstados(): ArrayList<CoronaEstatisticasAuxiliarExibirEstados> {
         var exibirDados = ArrayList<CoronaEstatisticasAuxiliarExibirEstados>()
         for (i in 0..coronaEstatisticas?.get(0)!!.infectedByRegion.size-1){
             var estado    = coronaEstatisticas?.get(0)!!.infectedByRegion[i].state!!
@@ -259,7 +219,7 @@ class EstadosFragment : Fragment() {
         }
 
         return exibirDados
-    }
+    }*/
 
     private fun filterListExibirDadosEstadosListFromAlertDialog(exibirDados:ArrayList<CoronaEstatisticasAuxiliarExibirEstados>,regiaoSelecionada : String, estadoSelecionado : String, ordenarPor : String,exibirEmOrdem : String) : ArrayList<CoronaEstatisticasAuxiliarExibirEstados> {
 
@@ -283,11 +243,11 @@ class EstadosFragment : Fragment() {
         var ordenado = ArrayList<CoronaEstatisticasAuxiliarExibirEstados>()
 
         when(ordenarPor){
-            "Ordem Alfabética" -> ordenado = ordenarPorOrdemAlfabetica(coronaEstatisticasFiltrado,exibirEmOrdem)
-            "Novos Casos" ->      ordenado = ordenarPorNovosCasos(coronaEstatisticasFiltrado,exibirEmOrdem)
-            "Total de Casos" ->   ordenado = ordenarPorTotalDeCasos(coronaEstatisticasFiltrado,exibirEmOrdem)
-            "Novos Óbitos" ->     ordenado = ordenarPorNovosObitos(coronaEstatisticasFiltrado,exibirEmOrdem)
-            "Total de Óbitos" ->  ordenado = ordenarPorTotalDeObitos(coronaEstatisticasFiltrado,exibirEmOrdem)
+            "Ordem Alfabética"  -> ordenado = ordenarPorOrdemAlfabetica(coronaEstatisticasFiltrado,exibirEmOrdem)
+            "Novos Casos"       -> ordenado = ordenarPorNovosCasos(coronaEstatisticasFiltrado,exibirEmOrdem)
+            "Total de Casos"    -> ordenado = ordenarPorTotalDeCasos(coronaEstatisticasFiltrado,exibirEmOrdem)
+            "Novos Óbitos"      -> ordenado = ordenarPorNovosObitos(coronaEstatisticasFiltrado,exibirEmOrdem)
+            "Total de Óbitos"   -> ordenado = ordenarPorTotalDeObitos(coronaEstatisticasFiltrado,exibirEmOrdem)
         }
 
         return ordenado
@@ -334,74 +294,4 @@ class EstadosFragment : Fragment() {
         return ordenado
     }
 
-    /*fun exibeAlertDialog(){
-
-        val v: View = layoutInflater.inflate(R.layout.alert_dialog_filtro_estados, null)
-        val alert = AlertDialog.Builder(context)
-        alert.setView(v)
-        alert.setCancelable(true)
-        alert.setPositiveButton("Pesquisar", DialogInterface.OnClickListener(){ dialogInterface: DialogInterface, i: Int -> })
-        alert.setNeutralButton("Cancelar",DialogInterface.OnClickListener(){ dialogInterface: DialogInterface, i: Int -> })
-        val alertSetColor = alert.create()
-        alertSetColor.show()
-        alertSetColor.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(resources.getColor(R.color.azul))
-        alertSetColor.getButton(DialogInterface.BUTTON_NEUTRAL).setTextColor(resources.getColor(R.color.azul))
-
-        val opcoesSpinnerRegiao = arrayListOf("Todas") + REGIAO.keys.toTypedArray()
-        var opcoesSpinnerEstado = arrayListOf("Todos") + SIGLAS_ESTADO.values.toTypedArray()
-
-        val spinnerRegiao = v.findViewById<Spinner>(R.id.spinnerRegiao)
-        val adapterRegiao = ArrayAdapter<String>(
-            requireContext(),
-            R.layout.simple_list_item_spinner,
-            opcoesSpinnerRegiao)
-        adapterRegiao.setDropDownViewResource(R.layout.simple_list_item_spinner)
-        spinnerRegiao.adapter = adapterRegiao
-
-        var regiaoSelecionada = spinnerRegiao.selectedItem.toString()
-
-        opcoesSpinnerEstado = opcoesSpinnerEstado
-                              if (regiaoSelecionada == opcoesSpinnerRegiao[0])
-                              else opcoesSpinnerEstado.filter { REGIAO[regiaoSelecionada]?.contains(it)!!}
-
-        val spinnerEstado = v.findViewById<Spinner>(R.id.spinnerEstado)
-        var adapterEstado = ArrayAdapter<String>(
-            requireContext(),
-            R.layout.simple_list_item_spinner,
-            opcoesSpinnerEstado)
-        adapterEstado.setDropDownViewResource(R.layout.simple_list_item_spinner)
-        spinnerEstado.adapter = adapterEstado
-
-        listenerSpinners(spinnerRegiao,spinnerEstado)
-
-    }
-
-    fun listenerSpinners(spinnerRegiao : Spinner,spinnerEstado : Spinner){
-
-        var opcoesSpinnerEstado = arrayListOf("Todos") + SIGLAS_ESTADO.values.toTypedArray()
-
-        spinnerRegiao.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-            }
-
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ){
-                var regiaoSelecionada = spinnerRegiao.selectedItem.toString()
-                var opcoesAux = opcoesSpinnerEstado
-                if (regiaoSelecionada == "Todas")  opcoesSpinnerEstado = opcoesSpinnerEstado
-                else  opcoesAux = opcoesSpinnerEstado.filter { it!! in REGIAO[regiaoSelecionada]!! }
-
-                var adapterEstado = ArrayAdapter<String>(
-                    requireContext(),
-                    R.layout.simple_list_item_spinner,
-                    arrayOf("Todos") + opcoesAux)
-                adapterEstado.setDropDownViewResource(R.layout.simple_list_item_spinner)
-                spinnerEstado.adapter = adapterEstado
-            }
-        }
-    }*/
 }

@@ -6,7 +6,6 @@ import android.content.DialogInterface
 import android.content.DialogInterface.OnShowListener
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.MutableLiveData
-import io.reactivex.Observable
 import java.util.*
 
 class CustomAlertDialog(

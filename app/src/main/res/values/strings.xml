@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Corona View</string>
     <string name="tab_text_1">Por Estados</string>
-    <string name="tab_text_2">Home</string>
-    <string name="tab_text_3">Corona map</string>
+    <string name="tab_text_2">Principal</string>
+    <string name="tab_text_3">Gráfico</string>
     <string name="title_activity_navigation_menu_acitivty">NavigationMenuAcitivty</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

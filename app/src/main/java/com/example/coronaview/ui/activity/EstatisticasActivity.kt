@@ -1,25 +1,16 @@
 package com.example.coronaview.ui.activity
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.get
-import androidx.lifecycle.Observer
 import androidx.viewpager.widget.ViewPager
 import com.example.coronaview.R
-import com.example.coronaview.common.Response
-import com.example.coronaview.common.Status
 import com.example.coronaview.ui.adapter.SectionsPagerAdapter
 import com.example.coronaview.ui.fragments.EstadosFragment
 import com.example.coronaview.ui.fragments.HomeFragment
-import com.example.coronaview.ui.fragments.MapCoronaFragment
-import com.example.coronaview.ui.viewModel.EstatisticasViewModel
+import com.example.coronaview.ui.fragments.GraficoCoronaFragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
-import kotlinx.android.synthetic.main.fragment_estados.*
-import kotlinx.android.synthetic.main.fragment_principal.*
 
 
 class EstatisticasActivity : AppCompatActivity() {
@@ -62,7 +53,7 @@ class EstatisticasActivity : AppCompatActivity() {
                 TAB_POR_ESTADOS ->
                     (sectionsPagerAdapter.getItem(TAB_POR_ESTADOS) as EstadosFragment).onClickFAB()
                 TAB_CORONA_MAP ->
-                    (sectionsPagerAdapter.getItem(TAB_CORONA_MAP) as MapCoronaFragment).onClickFAB()
+                    (sectionsPagerAdapter.getItem(TAB_CORONA_MAP) as GraficoCoronaFragment).onClickFAB()
             }
         }
 
