@@ -44,15 +44,15 @@ class GraficoCoronaFragment : Fragment() {
     private lateinit var barChart : BarChart
     private var labelsEstados = SIGLAS_ESTADO.keys.toTypedArray().toCollection(ArrayList())
 
-    private lateinit var observableCheckBoxTodas : CheckBox
-    private lateinit var observableCheckBoxSul   : CheckBox
-    private lateinit var observableCheckBoxSudeste     : CheckBox
-    private lateinit var observableCheckBoxCentroOeste : CheckBox
-    private lateinit var observableCheckBoxNorte       : CheckBox
-    private lateinit var observableCheckBoxNordeste    : CheckBox
+    private lateinit var checkBoxTodas : CheckBox
+    private lateinit var checkBoxSul   : CheckBox
+    private lateinit var checkBoxSudeste     : CheckBox
+    private lateinit var checkBoxCentroOeste : CheckBox
+    private lateinit var checkBoxNorte       : CheckBox
+    private lateinit var checkBoxNordeste    : CheckBox
 
-    private lateinit var observableCheckBoxObitos  : CheckBox
-    private lateinit var observableCheckBoxCasos   : CheckBox
+    private lateinit var checkBoxObitos  : CheckBox
+    private lateinit var checkBoxCasos   : CheckBox
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -94,15 +94,15 @@ class GraficoCoronaFragment : Fragment() {
         var exibirDados = parser.parseCoronaEstatisticasToListExibirDadosEstados(coronaEstatisticas!!)
             exibirDados.sortBy { it.estado }
 
-        observableCheckBoxTodas       = requireActivity().findViewById<CheckBox>(R.id.checkBoxTodas)
-        observableCheckBoxSul         = requireActivity().findViewById<CheckBox>(R.id.checkBoxSul)
-        observableCheckBoxSudeste     = requireActivity().findViewById<CheckBox>(R.id.checkBoxSudeste)
-        observableCheckBoxCentroOeste = requireActivity().findViewById<CheckBox>(R.id.checkBoxCentroOeste)
-        observableCheckBoxNorte       = requireActivity().findViewById<CheckBox>(R.id.checkBoxNorte)
-        observableCheckBoxNordeste    = requireActivity().findViewById<CheckBox>(R.id.checkBoxNordeste)
+        checkBoxTodas       = requireActivity().findViewById<CheckBox>(R.id.checkBoxTodas)
+        checkBoxSul         = requireActivity().findViewById<CheckBox>(R.id.checkBoxSul)
+        checkBoxSudeste     = requireActivity().findViewById<CheckBox>(R.id.checkBoxSudeste)
+        checkBoxCentroOeste = requireActivity().findViewById<CheckBox>(R.id.checkBoxCentroOeste)
+        checkBoxNorte       = requireActivity().findViewById<CheckBox>(R.id.checkBoxNorte)
+        checkBoxNordeste    = requireActivity().findViewById<CheckBox>(R.id.checkBoxNordeste)
 
-        observableCheckBoxObitos  = requireActivity().findViewById<CheckBox>(R.id.checkBoxObitos)
-        observableCheckBoxCasos   = requireActivity().findViewById<CheckBox>(R.id.checkBoxCasos)
+        checkBoxObitos  = requireActivity().findViewById<CheckBox>(R.id.checkBoxObitos)
+        checkBoxCasos   = requireActivity().findViewById<CheckBox>(R.id.checkBoxCasos)
 
         barChart = requireActivity().findViewById(R.id.barchart) as BarChart
 
@@ -155,23 +155,23 @@ class GraficoCoronaFragment : Fragment() {
 
         var labels = labelsEstados
 
-        observableCheckBoxTodas.setOnCheckedChangeListener { buttonView, isChecked ->
+        checkBoxTodas.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked == false){
-                observableCheckBoxSul.isChecked         = false
-                observableCheckBoxSudeste.isChecked     = false
-                observableCheckBoxCentroOeste.isChecked = false
-                observableCheckBoxNorte.isChecked       = false
-                observableCheckBoxNordeste.isChecked    = false
+                checkBoxSul.isChecked         = false
+                checkBoxSudeste.isChecked     = false
+                checkBoxCentroOeste.isChecked = false
+                checkBoxNorte.isChecked       = false
+                checkBoxNordeste.isChecked    = false
             }
             else{
-                observableCheckBoxSul.isChecked         = true
-                observableCheckBoxSudeste.isChecked     = true
-                observableCheckBoxCentroOeste.isChecked = true
-                observableCheckBoxNorte.isChecked       = true
-                observableCheckBoxNordeste.isChecked    = true
+                checkBoxSul.isChecked         = true
+                checkBoxSudeste.isChecked     = true
+                checkBoxCentroOeste.isChecked = true
+                checkBoxNorte.isChecked       = true
+                checkBoxNordeste.isChecked    = true
             }
         }
-        observableCheckBoxSul.setOnCheckedChangeListener { buttonView, isChecked ->
+        checkBoxSul.setOnCheckedChangeListener { buttonView, isChecked ->
             if(isChecked == false){
 
                 labels = labels.filter {
@@ -281,7 +281,7 @@ class GraficoCoronaFragment : Fragment() {
                 barchart.invalidate()
             }
         }
-        observableCheckBoxSudeste.setOnCheckedChangeListener { buttonView, isChecked ->
+        checkBoxSudeste.setOnCheckedChangeListener { buttonView, isChecked ->
             if(isChecked == false){
 
                 labels = labels.filter {
@@ -390,7 +390,7 @@ class GraficoCoronaFragment : Fragment() {
                 barchart.invalidate()
             }
         }
-        observableCheckBoxCentroOeste.setOnCheckedChangeListener { buttonView, isChecked ->
+        checkBoxCentroOeste.setOnCheckedChangeListener { buttonView, isChecked ->
             if(isChecked == false){
 
                 labels = labels.filter {
@@ -499,7 +499,7 @@ class GraficoCoronaFragment : Fragment() {
                 barchart.invalidate()
             }
         }
-        observableCheckBoxNorte.setOnCheckedChangeListener { buttonView, isChecked ->
+        checkBoxNorte.setOnCheckedChangeListener { buttonView, isChecked ->
             if(isChecked == false){
 
                 labels = labels.filter {
@@ -608,7 +608,7 @@ class GraficoCoronaFragment : Fragment() {
                 barchart.invalidate()
             }
         }
-        observableCheckBoxNordeste.setOnCheckedChangeListener { buttonView, isChecked ->
+        checkBoxNordeste.setOnCheckedChangeListener { buttonView, isChecked ->
             if(isChecked == false){
 
                 labels = labels.filter {
@@ -718,7 +718,7 @@ class GraficoCoronaFragment : Fragment() {
             }
         }
 
-        observableCheckBoxObitos.setOnCheckedChangeListener { buttonView, isChecked ->
+        checkBoxObitos.setOnCheckedChangeListener { buttonView, isChecked ->
             if(isChecked == false) barWidth *= 2
             else                   barWidth /= 2
             checkBoxCentroOeste.isChecked   = !checkBoxCentroOeste.isChecked
@@ -733,7 +733,7 @@ class GraficoCoronaFragment : Fragment() {
             checkBoxSul.isChecked           = !checkBoxSul.isChecked
 
         }
-        observableCheckBoxCasos.setOnCheckedChangeListener { buttonView, isChecked ->
+        checkBoxCasos.setOnCheckedChangeListener { buttonView, isChecked ->
             if(isChecked == false) barWidth *= 2
             else                   barWidth /= 2
 
