@@ -1,13 +1,17 @@
 package com.example.coronaview.ui.activity
 
+import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.viewpager.widget.ViewPager
 import com.example.coronaview.R
 import com.example.coronaview.ui.adapter.SectionsPagerAdapter
 import com.example.coronaview.ui.fragments.EstadosFragment
-import com.example.coronaview.ui.fragments.HomeFragment
 import com.example.coronaview.ui.fragments.GraficoCoronaFragment
+import com.example.coronaview.ui.fragments.HomeFragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
@@ -31,6 +35,10 @@ class EstatisticasActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        setSupportActionBar(toolbar)
+
         val sectionsPagerAdapter =
             SectionsPagerAdapter(
                 this,
@@ -72,6 +80,21 @@ class EstatisticasActivity : AppCompatActivity() {
         })
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_toolbar_options, menu);
+        return true;
+    }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val id: Int = item.getItemId()
+        when (id) {
+            R.id.menu_toolbar_sobre -> {
+                intent = Intent(this,SobreActivity::class.java)
+                startActivity(intent)
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
     companion object{
         const val TAB_POR_ESTADOS = 0
         const val TAB_HOME = 1

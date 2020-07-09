@@ -58,6 +58,7 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment-ktx:2.2.2'
     implementation 'androidx.navigation:navigation-ui-ktx:2.2.2'
     implementation 'com.jjoe64:graphview:4.2.2'
+    implementation 'com.github.medyo:android-about-page:1.2.6'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.0'
     implementation 'com.github.yosriz:android-datamaps:0.0.1'
     testImplementation 'junit:junit:4.12'
