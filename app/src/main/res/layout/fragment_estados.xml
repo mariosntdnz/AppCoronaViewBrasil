@@ -7,7 +7,11 @@
     android:layout_height="match_parent"
     android:background="#FFFFFF"
     tools:context=".ui.fragments.EstadosFragment">
-
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/swiperefresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewEstatisticasPorEstado"
         android:layout_width="0dp"
@@ -18,5 +22,5 @@
         tools:ignore="MissingConstraints">
 
     </androidx.recyclerview.widget.RecyclerView>
-
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

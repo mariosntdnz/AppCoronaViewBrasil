@@ -11,6 +11,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.coronaview.R
 import com.example.coronaview.common.Response
 import com.example.coronaview.common.Status
@@ -56,10 +57,15 @@ class EstadosFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_estados, container, false)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        // TODO: Use the ViewModel
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        var swipe = view.findViewById<SwipeRefreshLayout>(R.id.swiperefresh)
+        swipe.setOnRefreshListener {
+            viewModel.getCoronaEstatisticas()
+            swipe.setRefreshing(false);
+        }
     }
+
 
     private fun processResponse(response: Response) {
         when (response.status) {

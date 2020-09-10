@@ -147,6 +147,7 @@ class GraficoCoronaFragment : Fragment() {
         if(data.dataSetCount >= 2) barChart.groupBars(1f,groupSpace,barSpace)
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     fun plotGrafico(exibirDados: ArrayList<CoronaEstatisticasAuxiliarExibirEstados>){
 
         var barEntriesNovosCasos    = ArrayList<BarEntry>()
