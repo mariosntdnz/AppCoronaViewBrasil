@@ -1,307 +1,317 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/fragmento_principal"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.fragments.HomeFragment">
+    xmlns:bind="http://schemas.android.com/tools">
 
-    <TextView
-        android:id="@+id/textViewTituloFragmentoPrincipal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="Painel Covid-19 / Brasil"
-        android:textAllCaps="true"
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="30sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/guideline2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <data>
 
-    <ProgressBar
-        android:id="@+id/progressBarRequisicao"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <variable
+            name="data"
+            type="com.example.coronaview.modelDataBinding.HomeFragmentDataBinding" />
+    </data>
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardViewCasos"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:background="@drawable/contorno_view_red"
-        android:visibility="invisible"
-        app:cardCornerRadius="20dp"
-        app:cardElevation="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline2">
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/fragmento_principal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.fragments.HomeFragment">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+        <TextView
+            android:id="@+id/textViewTituloFragmentoPrincipal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Painel Covid-19 / Brasil"
+            android:textAllCaps="true"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/guideline2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ProgressBar
+            android:id="@+id/progressBarRequisicao"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            bind:isVisible="@{data.status == false}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardViewCasos"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
             android:background="@drawable/contorno_view_red"
-            android:clipToPadding="false"
-            android:orientation="vertical">
+            bind:isVisible="@{data.status}"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/guideline2">
 
-            <TextView
-                android:id="@+id/textViewCasosConfirmados"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#EC0909"
-                android:gravity="center"
-                android:text="Casos Confirmados"
-                android:textColor="#FFFFFF"
-                android:textSize="24sp" />
+                android:background="@drawable/contorno_view_red"
+                android:clipToPadding="false"
+                android:orientation="vertical">
 
-            <androidx.gridlayout.widget.GridLayout
+                <TextView
+                    android:id="@+id/textViewCasosConfirmados"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#EC0909"
+                    android:gravity="center"
+                    android:text="Casos Confirmados"
+                    android:textColor="#FFFFFF"
+                    android:textSize="24sp" />
+
+                <androidx.gridlayout.widget.GridLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:columnCount="2"
+                    app:rowCount="2">
+
+                    <TextView
+                        android:id="@+id/textViewNovosCasos"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="\n  Novos Casos : \n"
+                        android:textColor="#0E0D0D"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textViewNumeroNovosCasos"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@{data.casosNovos}"
+                        android:textColor="#0E0D0D"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        app:layout_gravity="fill_horizontal|left" />
+
+                    <TextView
+                        android:id="@+id/textViewTotalDeCasos"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="\n  Total de Casos : \n"
+                        android:textColor="#0C0B0B"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textViewNumeroTotalCasos"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@{data.casosTotais}"
+                        android:textColor="#0E0D0D"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        app:layout_gravity="fill_horizontal|left" />
+                </androidx.gridlayout.widget.GridLayout>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.4" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardViewObitos"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/contorno_view"
+            bind:isVisible="@{data.status}"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/guideline">
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:columnCount="2"
-                app:rowCount="2">
+                android:background="@drawable/contorno_view_black"
+                android:clipToPadding="false"
+                android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/textViewNovosCasos"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="\n  Novos Casos : \n"
-                    android:textColor="#0E0D0D"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/textViewNumeroNovosCasos"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:id="@+id/textViewObitosConfirmados"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#181619"
                     android:gravity="center"
-                    android:text="\n100000000\n"
-                    android:textColor="#0E0D0D"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    app:layout_gravity="fill_horizontal|left" />
+                    android:text="Óbitos Confirmados"
+                    android:textColor="#FFFFFF"
+                    android:textSize="24sp" />
 
-                <TextView
-                    android:id="@+id/textViewTotalDeCasos"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="\n  Total de Casos : \n"
-                    android:textColor="#0C0B0B"
-                    android:textStyle="bold" />
+                <androidx.gridlayout.widget.GridLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:columnCount="2"
+                    app:rowCount="2">
 
-                <TextView
-                    android:id="@+id/textViewNumeroTotalCasos"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="\n100\n"
-                    android:textColor="#0E0D0D"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    app:layout_gravity="fill_horizontal|left" />
-            </androidx.gridlayout.widget.GridLayout>
+                    <TextView
+                        android:id="@+id/textViewNovosObitos"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="\n  Novos Óbitos : \n"
+                        android:textColor="#0E0D0D"
+                        android:textStyle="bold" />
 
-        </LinearLayout>
+                    <TextView
+                        android:id="@+id/textViewNumeroNovosObitos"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@{data.obitosNovos}"
+                        android:textColor="#0E0D0D"
+                        android:textStyle="bold"
+                        app:layout_gravity="fill_horizontal|left" />
 
-    </androidx.cardview.widget.CardView>
+                    <TextView
+                        android:id="@+id/textViewTotalObitos"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="\n  Total de Óbitos : \n"
+                        android:textColor="#0C0B0B"
+                        android:textStyle="bold" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.4" />
+                    <TextView
+                        android:id="@+id/textViewNumeroTotalObitos"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@{data.obitosTotais}"
+                        android:textColor="#0E0D0D"
+                        android:textStyle="bold"
+                        app:layout_gravity="fill_horizontal|left" />
+                </androidx.gridlayout.widget.GridLayout>
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardViewObitos"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:background="@drawable/contorno_view"
-        android:visibility="invisible"
-        app:cardCornerRadius="20dp"
-        app:cardElevation="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline">
+            </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/contorno_view_black"
-            android:clipToPadding="false"
-            android:orientation="vertical">
+        </androidx.cardview.widget.CardView>
 
-            <TextView
-                android:id="@+id/textViewObitosConfirmados"
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.1504788" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardViewRecuperados"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/contorno_view"
+            bind:isVisible="@{data.status}"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/guideline3">
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#181619"
-                android:gravity="center"
-                android:text="Óbitos Confirmados"
-                android:textColor="#FFFFFF"
-                android:textSize="24sp" />
-
-            <androidx.gridlayout.widget.GridLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:columnCount="2"
-                app:rowCount="2">
+                android:background="@drawable/contorno_view_green"
+                android:clipToPadding="false"
+                android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/textViewNovosObitos"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="\n  Novos Óbitos : \n"
-                    android:textColor="#0E0D0D"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/textViewNumeroNovosObitos"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:id="@+id/textViewPacientesRecuperados"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#67AC2B"
                     android:gravity="center"
-                    android:text="\n100000000\n"
-                    android:textColor="#0E0D0D"
-                    android:textStyle="bold"
-                    app:layout_gravity="fill_horizontal|left" />
+                    android:text="Pacientes Recuperados"
+                    android:textColor="#FFFFFF"
+                    android:textSize="24sp" />
 
-                <TextView
-                    android:id="@+id/textViewTotalObitos"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="\n  Total de Óbitos : \n"
-                    android:textColor="#0C0B0B"
-                    android:textStyle="bold" />
+                <androidx.gridlayout.widget.GridLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:columnCount="2"
+                    app:rowCount="2">
 
-                <TextView
-                    android:id="@+id/textViewNumeroTotalObitos"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="\n100\n"
-                    android:textColor="#0E0D0D"
-                    android:textStyle="bold"
-                    app:layout_gravity="fill_horizontal|left" />
-            </androidx.gridlayout.widget.GridLayout>
+                    <TextView
+                        android:id="@+id/textViewNovosRecuperados"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="\n  Novos Recuperados : \n"
+                        android:textColor="#0E0D0D"
+                        android:textStyle="bold" />
 
-        </LinearLayout>
+                    <TextView
+                        android:id="@+id/textViewNumeroNovosRecuperados"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@{data.recuperadosNovos}"
+                        android:textColor="#0E0D0D"
+                        android:textStyle="bold"
+                        app:layout_gravity="fill_horizontal|left" />
 
-    </androidx.cardview.widget.CardView>
+                    <TextView
+                        android:id="@+id/textViewTotalRecuperados"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="\n  Total de Recuperados : \n"
+                        android:textColor="#0C0B0B"
+                        android:textStyle="bold" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.1504788" />
+                    <TextView
+                        android:id="@+id/textViewNumeroTotalRecuperados"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@{data.recuperadosTotais}"
+                        android:textColor="#0E0D0D"
+                        android:textStyle="bold"
+                        app:layout_gravity="fill_horizontal|left" />
+                </androidx.gridlayout.widget.GridLayout>
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardViewRecuperados"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:background="@drawable/contorno_view"
-        android:visibility="invisible"
-        app:cardCornerRadius="20dp"
-        app:cardElevation="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline3">
+            </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/contorno_view_green"
-            android:clipToPadding="false"
-            android:orientation="vertical">
+        </androidx.cardview.widget.CardView>
 
-            <TextView
-                android:id="@+id/textViewPacientesRecuperados"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#67AC2B"
-                android:gravity="center"
-                android:text="Pacientes Recuperados"
-                android:textColor="#FFFFFF"
-                android:textSize="24sp" />
+        <TextView
+            android:id="@+id/textViewUltimaAtualizacao"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginBottom="24dp"
+            android:gravity="center"
+            android:text="@{data.ultimaAtt}"
+            android:textColor="#C8C7C7"
+            bind:isVisible="@{data.status}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cardViewRecuperados" />
 
-            <androidx.gridlayout.widget.GridLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:columnCount="2"
-                app:rowCount="2">
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.65" />
 
-                <TextView
-                    android:id="@+id/textViewNovosRecuperados"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="\n  Novos Recuperados : \n"
-                    android:textColor="#0E0D0D"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/textViewNumeroNovosRecuperados"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="\n100000000\n"
-                    android:textColor="#0E0D0D"
-                    android:textStyle="bold"
-                    app:layout_gravity="fill_horizontal|left" />
-
-                <TextView
-                    android:id="@+id/textViewTotalRecuperados"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="\n  Total de Recuperados : \n"
-                    android:textColor="#0C0B0B"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/textViewNumeroTotalRecuperados"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="\n100\n"
-                    android:textColor="#0E0D0D"
-                    android:textStyle="bold"
-                    app:layout_gravity="fill_horizontal|left" />
-            </androidx.gridlayout.widget.GridLayout>
-
-        </LinearLayout>
-
-    </androidx.cardview.widget.CardView>
-
-    <TextView
-        android:id="@+id/textViewUltimaAtualizacao"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginBottom="24dp"
-        android:gravity="center"
-        android:text="Atualizado em : "
-        android:textColor="#C8C7C7"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardViewRecuperados" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.65" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
